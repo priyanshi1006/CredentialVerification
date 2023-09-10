@@ -44,28 +44,30 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String uname = username.getText().toString();
                 String pwd = password.getText().toString();
-
-                ArrayList<HashMap<String, String>> res = db.find(uname);
-
-                if(res.size() == 0)
-                {
-                    Toast.makeText(MainActivity.this, "Username is not valid", Toast.LENGTH_SHORT).show();
+                if(uname.trim().equals("") || pwd.trim().equals("")) {
+                    Toast.makeText(MainActivity.this, "Empty Username or Pass", Toast.LENGTH_SHORT).show();
                 }
+                else {
 
-                for (HashMap<String, String> re : res) {
-                    if(re.get("username").equals(pwd))
-                    {
-                        edit = sp.edit();
-                        edit.putString("username", uname);
-                        edit.putString("password", pwd);
-                        edit.commit();
-                        startActivity(loginIntent);
+                    ArrayList<HashMap<String, String>> res = db.find(uname);
+
+                    if (res.size() == 0) {
+                        Toast.makeText(MainActivity.this, "Username is not valid", Toast.LENGTH_SHORT).show();
                     }
-                    else {
-                        Toast.makeText(MainActivity.this, "Credentials is not valid", Toast.LENGTH_SHORT).show();
+
+
+                    for (HashMap<String, String> re : res) {
+                        if (re.get("password").equals(pwd)) {
+                            edit = sp.edit();
+                            edit.putString("username", uname);
+                            edit.putString("password", pwd);
+                            edit.commit();
+                            startActivity(loginIntent);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Credentials is not valid", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
-
             }
         });
 
@@ -74,21 +76,24 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String uname = username.getText().toString();
                 String pwd = password.getText().toString();
-                ArrayList<HashMap<String, String>> res = db.find(uname);
-
-                if(res.size() == 0) {
-                    edit = sp.edit();
-                    edit.putString("username", uname);
-                    edit.putString("password", pwd);
-                    edit.commit();
-                    db.insertQuery(uname, pwd);
-                    startActivity(loginIntent);
-
+                if(uname.trim().equals("") || pwd.trim().equals("")) {
+                    Toast.makeText(MainActivity.this, "Empty Username or Pass", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(MainActivity.this, "Username is already Exist", Toast.LENGTH_SHORT).show();
-                }
+                    ArrayList<HashMap<String, String>> res = db.find(uname);
 
+                    if (res.size() == 0) {
+                        edit = sp.edit();
+                        edit.putString("username", uname);
+                        edit.putString("password", pwd);
+                        edit.commit();
+                        db.insertQuery(uname, pwd);
+                        startActivity(loginIntent);
+
+                    } else {
+                        Toast.makeText(MainActivity.this, "Username is already Exist", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
